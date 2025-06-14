@@ -40,14 +40,13 @@ class CustomData:
                  #Personality: str
                  ):
 
-        self.Time_spent_Alone = Time_spent_Alone
+        self.Time_spent_Alone = float(Time_spent_Alone)
         self.Stage_fear = Stage_fear
-        self.Social_event_attendance = Social_event_attendance
-        self.Going_outside = Going_outside
+        self.Social_event_attendance = float(Social_event_attendance)
+        self.Going_outside = float(Going_outside)
         self.Drained_after_socializing = Drained_after_socializing
-        self.Friends_circle_size = Friends_circle_size
-        self.Post_frequency = Post_frequency
-       # self.Personality = Personality
+        self.Friends_circle_size = float(Friends_circle_size)
+        self.Post_frequency = float(Post_frequency)
         
     def get_data_as_data_frame(self):
         try:

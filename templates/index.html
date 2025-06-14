@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personality Predictor</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+
+</head>
+<body>
+    <div class="form-container">
+        <h1>🧠 Personality Predictor</h1>
+
+        <form action="/PersonalityPredictor" method="POST">
+            <label for="Time_spent_Alone">🕒 Time Spent Alone (hours/day):</label>
+            <input type="number" name="Time_spent_Alone" step="0.1" required>
+
+            <label for="Stage_fear">🎤 Stage Fear:</label>
+            <select name="Stage_fear" required>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+
+            <label for="Social_event_attendance">🎉 Social Event Attendance (per month):</label>
+            <input type="number" name="Social_event_attendance" required>
+
+            <label for="Going_outside">🚶 Going Outside Frequency (days/week):</label>
+            <input type="number" name="Going_outside" required>
+
+            <label for="Drained_after_socializing">😩 Drained After Socializing:</label>
+            <select name="Drained_after_socializing" required>
+                <option value="Yes">Yes</option>
+                <option value="No">No</option>
+            </select>
+
+            <label for="Friends_circle_size">👥 Friends Circle Size:</label>
+            <input type="number" name="Friends_circle_size" required>
+
+            <label for="Post_frequency">📱 Social Media Post Frequency (per week):</label>
+            <input type="number" name="Post_frequency" required>
+
+            <button type="submit">🔮 Predict Personality</button>
+        </form>
+
+        {% if result %}
+            <div id="resultModal" class="modal">
+                <div class="modal-content">
+                    <span class="close-btn" onclick="closeModal()">&times;</span>
+                    <h2>Your Personality:</h2>
+                    <p><strong>{{ result }}</strong></p>
+                </div>
+            </div>
+            <script>
+                function closeModal() {
+                    document.getElementById('resultModal').style.display = 'none';
+                }
+            
+                // Show the modal on page load
+                window.onload = function() {
+                    document.getElementById('resultModal').style.display = 'block';
+                }
+            </script>
+        {% endif %}
+
+    </div>
+</body>
+</html>

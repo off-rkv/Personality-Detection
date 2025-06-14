@@ -47,11 +47,11 @@ class DataTransformation:
                     ("scaler", StandardScaler())
                 ]
             )
-            
+
             cat_pipeline=Pipeline(
                 steps=[
                     ("imputer", SimpleImputer(strategy="constant", fill_value="missing")),
-                    ('one_hot_encoder',OneHotEncoder())
+                    ('one_hot_encoder',OneHotEncoder(handle_unknown='ignore'))
                 ]
             )
             logging.info("Numerical columns standard scaling completed")

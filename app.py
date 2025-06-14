@@ -18,9 +18,7 @@ def index():
 
 @app.route('/PersonalityPredictor', methods=['GET', 'POST'])
 def Personality_Predictor():
-    if request.method == 'GET':
-        return render_template('home.html')
-    else:
+    if request.method == 'POST':
         data = CustomData(
             Time_spent_Alone = request.form.get("Time_spent_Alone"),
             Stage_fear = request.form.get("Stage_fear"),
@@ -32,16 +30,19 @@ def Personality_Predictor():
         )
         pred_df = data.get_data_as_data_frame()
 
-        predict_pipeline=PredictPipeline()
-        result=predict_pipeline.predict(pred_df)
+        predict_pipeline = PredictPipeline()
+        result = predict_pipeline.predict(pred_df)
 
-        label_encoder=load_object("artifacts/label_encoder.pkl")
-        
-        result=label_encoder.inverse_transform(result)
+        label_encoder = load_object("artifacts/label_encoder.pkl")
+        result = label_encoder.inverse_transform(result)
 
-        logging.info('Prediction completed, result: %s', result)
-        return render_template('home.html',result=result[0])
+        return render_template('index.html', result=result[0])
+    
+    # No result in GET
+    return render_template('index.html')
+
+
 
 if __name__=="__main__":
-    app.run(host="0.0.0.0")        
+    app.run(host="0.0.0.0",debug=True)        
 
