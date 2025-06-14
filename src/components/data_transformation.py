@@ -8,7 +8,10 @@ import numpy as np
 from dataclasses import dataclass
 
 from sklearn.compose import ColumnTransformer
-from sklearn.impute import IterativeImputer
+
+
+from sklearn.impute import SimpleImputer
+
 from sklearn.pipeline import Pipeline
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.linear_model import BayesianRidge
@@ -27,40 +30,27 @@ class DataTransformation:
     def __init__(self):
         self.data_transformation_config=DataTransformationConfig()
 
-    def get_transformation_object(self):
+    def get_transformation_object(self,input_df):
         '''This function is responsible for data transformation'''
 
-        ingestion=DataIngestion()
-        ingestion.initiate_data_ingestion()
-        df=ingestion.df
-
         try:
-            numerical_columns=df.select_dtypes(exclude='O').columns.to_list() # list of all the numerical columns
-            categorical_columns=df.select_dtypes(include='O').columns.to_list() # list of all the categorical columns
+            numerical_columns=input_df.select_dtypes(exclude='O').columns.to_list() # list of all the numerical columns
+            categorical_columns=input_df.select_dtypes(include='O').columns.to_list() # list of all the categorical columns
 
             #Use to pipeline to chain together multiple data transformation 
             logging.info("Pipeline the data transformation steps")
 
+            
             num_pipeline = Pipeline(
                 steps=[
-                    ("imputer", IterativeImputer(
-                        estimator=BayesianRidge(),
-                        max_iter=10,
-                        skip_complete=True,
-                        random_state=0
-                    )),
+                    ("imputer", SimpleImputer(strategy="mean")),
                     ("scaler", StandardScaler())
                 ]
             )
-
+            
             cat_pipeline=Pipeline(
                 steps=[
-                    ('imputer',IterativeImputer(
-                        estimator=BayesianRidge(),
-                        max_iter=10,
-                        skip_complete=True,
-                        random_state=0
-                    )),
+                    ("imputer", SimpleImputer(strategy="constant", fill_value="missing")),
                     ('one_hot_encoder',OneHotEncoder())
                 ]
             )
@@ -87,7 +77,6 @@ class DataTransformation:
             logging.info("Read train and test data completed")
             logging.info('Obtaining preprocessing object')
 
-            preprocessing_obj=self.get_transformation_object()
 
             target_column_name='Personality'
 
@@ -96,6 +85,8 @@ class DataTransformation:
 
             target_feature_train_df = train_df[target_column_name]
             target_feature_test_df = test_df[target_column_name]
+            
+            preprocessing_obj=self.get_transformation_object(input_feature_train_df)
             
             logging.info(
                 f'Applying preprocessor object on training dataframe and testing dataframe'
